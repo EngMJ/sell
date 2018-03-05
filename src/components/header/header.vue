@@ -14,7 +14,7 @@
         </div>
         <div v-if="seller.supports" class="supports">
           <!--通过bind命令来绑定class-->
-          <span class="icon" :class="classMap[seller.supports[0].type]"></span>
+          <icon :type="seller.supports[0].type" :iconSize="12"></icon>
           <span class="text">{{seller.supports[0].description}}</span>
         </div>
       </div>
@@ -46,7 +46,7 @@
           </div>
           <ul v-if="seller.supports" class="supports">
             <li v-for="(item, i) in seller.supports" :key="i" class="supportsItem">
-              <span class="icon" :class="classMap[item.type]"></span>
+              <icon :type="item.type" :iconSize="16"></icon>
               <span class="text">{{item.description}}</span>
             </li>
           </ul>
@@ -67,6 +67,7 @@
 </template>
 <script type="text/ecmascript-6">
   import star from '@/components/star/star';
+  import icon from '@/components/titleIcon/titleIcon';
   export default{
     props: {
       seller: {
@@ -91,7 +92,8 @@
       }
     },
     components: {
-      star
+      star,
+      icon
     }
   };
 </script>
@@ -142,22 +144,6 @@
           font-size: 10px
           line-height: 12px
         .supports
-          .icon // 3 通过class来动态设置图片,通过且选择器
-            display: inline-block
-            width: 12px
-            height: 12px
-            background-size: 12px 12px
-            background-repeat: no-repeat
-            &.decrease
-              bg-image('decrease_1')
-            &.discount
-              bg-image('discount_1')
-            &.guarantee
-              bg-image('guarantee_1')
-            &.invoice
-              bg-image('invoice_1')
-            &.special
-              bg-image('special_1')
           .text
             vertical-align: top
             font-size: 10px
@@ -295,21 +281,6 @@
               margin-bottom: 12px
               &:last-child
                 margin-bottom: 0
-              .icon
-                display: inline-block
-                width: 16px
-                height: 16px
-                background-size: 16px 16px
-                &.decrease
-                  bg-image('decrease_2')
-                &.discount
-                  bg-image('discount_2')
-                &.guarantee
-                  bg-image('guarantee_2')
-                &.invoice
-                  bg-image('invoice_2')
-                &.special
-                  bg-image('special_2')
               .text
                 vertical-align: top
                 font-size: 12px
