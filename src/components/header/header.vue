@@ -14,7 +14,7 @@
         </div>
         <div v-if="seller.supports" class="supports">
           <!--通过bind命令来绑定class-->
-          <icon :type="seller.supports[0].type" :iconSize="12"></icon>
+          <icon :type="seller.supports[0].type" :iconSize="1"></icon>
           <span class="text">{{seller.supports[0].description}}</span>
         </div>
       </div>
@@ -46,7 +46,7 @@
           </div>
           <ul v-if="seller.supports" class="supports">
             <li v-for="(item, i) in seller.supports" :key="i" class="supportsItem">
-              <icon :type="item.type" :iconSize="16"></icon>
+              <icon :type="item.type" :iconSize="2"></icon>
               <span class="text">{{item.description}}</span>
             </li>
           </ul>

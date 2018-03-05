@@ -15,3 +15,21 @@ bg-image($url)
   background-image: url($url+'@2x.png')
   @media (-webkit-min-device-pixel-ratio: 3),(min-device-pixel-ratio: 3)
     background-image: url($url+'@3x.png')
+
+// icon方法
+icon($size,$number)
+  display: inline-block
+  width: $size
+  height: $size
+  background-size: $size $size
+  background-repeat: no-repeat
+  &.decrease
+    bg-image('decrease_'+$number)
+  &.discount
+    bg-image('discount_'+$number)
+  &.guarantee
+    bg-image('guarantee_'+$number)
+  &.invoice
+    bg-image('invoice_'+$number)
+  &.special
+    bg-image('special_'+$number)
