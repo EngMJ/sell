@@ -1,0 +1,33 @@
+// 设置基本css样式
+body, html
+  font-weight: 200
+  line-height: 1
+  font-family: 'PingFang SC','STHeitiSC-Light',arial,sans-serif // 常用字体
+
+// 清除最后的浮动,保留高度
+.clearfix
+  display: inline-block
+  &:after
+    display: block
+    content: '.'
+    height: 0
+    line-height: 0
+    clear: both
+    visibility: hidden
+
+// todo 1 1px设置
+// 媒体查询的顺序应当从小到大,否则产生覆盖
+// 媒体查询,最小设备比1.5代表3x,2代表2x
+// 配合图像的Y轴缩放,即(1.5*0.7≈1或2*0.5=1),达到移动端1px效果
+// 下边框1px使用的:after,上边框1px使用:before
+@media (-webkit-min-device-pixel-ratio: 1.5),(min-device-aspect-ratio: 1.5)
+  .border-1px
+    &:after
+      -webkit-transform: scaleY(0.7)
+      transform: scaleY(0.7)
+
+@media (-webkit-min-device-pixel-ratio: 2),(min-device-aspect-ratio: 2)
+  .border-1px
+    &:after
+      -webkit-transform: scaleY(0.5)
+      transform: scaleY(0.5)
