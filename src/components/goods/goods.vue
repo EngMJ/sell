@@ -60,6 +60,7 @@ export default{
       font-size: 0
       .titleContent
         .contentItem
+          // todo 11 通过display的显示类型为table,实现垂直居中效果
           display: table
           height: 54px
           margin: 0 auto
