@@ -10,7 +10,30 @@
         </li>
       </ul>
     </div>
-    <div class="content"></div>
+    <div class="content">
+      <div class="foods-list" v-for="(item,i) in goods" :key="i">
+        <h1 class="title">{{item.name}}</h1>
+        <ul class="foods-item border-1px" v-for="(foods,p) in item.foods" :key="p">
+          <li>
+            <div class="icon">
+              <img width="58" height="58" :src="foods.image" alt="">
+            </div>
+            <div class="foods-content">
+              <h2 class="name">{{foods.name}}</h2>
+              <div class="description" v-show="foods.description">{{foods.description}}</div>
+              <div class="sell">
+                <span class="sell-count">月售{{foods.sellCount}}份</span>
+                <span class="sell-ratings">好评率{{foods.rating}}%</span>
+              </div>
+              <div class="price">
+                <span class="on-price">{{foods.price}}</span>
+                <span v-show="foods.oldPrice" class="old-price">{{foods.oldPrice}}</span>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -73,4 +96,65 @@ export default{
             border-1px(rgba(7,17,27,0.1))
     .content
       flex: 1
+      .foods-list
+        font-size: 0
+        .title
+          height: 26px
+          padding-left: 12px
+          color: rgb(147,153,159)
+          font-size: 12px
+          line-height: 26px
+          border-left: 2px solid #d9dde1
+          background: #f3f5f7
+        .foods-item
+          padding: 18px 0px
+          margin: 0 18px
+          border-1px(rgba(7,17,27,0.1))
+          &:last-child
+            border-none()
+          .icon
+            display: inline-block
+            vertical-align: top
+          .foods-content
+            display: inline-block
+            margin-left: 10px
+            font-size: 10px
+            .name
+              margin: 2px 0 8px 0
+              height: 14px
+              font-size: 14px
+              color: rgb(7,17,27)
+              line-height: 14px
+            .description
+              padding-bottom: 8px
+              font-size: 10px
+              color: rgb(147,153,159)
+              line-height: 10px
+            .sell
+              font-size: 10px
+              color: rgb(143,153,159)
+              line-height: 10px
+              .sell-count
+                margin-right: 12px
+            .price
+              .on-price
+                color: #F01414
+                font-size: 14px
+                font-weight: 700
+                line-height: 24px
+                &:before
+                  display: inline-block
+                  content: '¥'
+                  font-size: 10px
+                  font-weight: normal
+              .old-price
+                margin-left: 8px
+                color: rgb(147,153,159)
+                font-size: 10px
+                font-weight: 700
+                line-height: 24px
+                &:before
+                  display: inline-block
+                  content: '¥'
+                  font-weight: normal
 </style>

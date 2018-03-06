@@ -9,6 +9,10 @@ border-1px($color)
     width: 100%
     border-top: 1px solid $color
     content: ''
+// 清除底部1px边框
+border-none()
+  &:after
+    display: none
 
 // todo 4 2x图与3x图的媒体查询
 bg-image($url)
