@@ -52,7 +52,7 @@ export default{
   },
   created () {
     this.$ajax.get('api/goods').then((res) => {
-      if (res.data.erroron === 0) {
+      if (res.data.errno === 0) {
         this.goods = res.data.data;
       }
     }).catch((err) => {
@@ -153,6 +153,7 @@ export default{
                 font-size: 10px
                 font-weight: 700
                 line-height: 24px
+                text-decoration: line-through
                 &:before
                   display: inline-block
                   content: '¥'

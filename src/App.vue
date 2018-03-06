@@ -36,7 +36,7 @@
     created () {
       // 获取数据
       this.$ajax.get('api/seller').then((res) => {
-        if (res.data.erroron === 0) {
+        if (res.data.errno === 0) {
           this.seller = res.data.data;
         }
       }).catch((err) => {
