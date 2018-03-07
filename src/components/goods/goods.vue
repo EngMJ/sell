@@ -3,7 +3,8 @@
     <!--12 better-scroll为wrapper元素添加ref,从而获得DOM,同时为容器内第一个子元素添加calss从而进样式更改和滚动逻辑-->
     <div class="left-title" ref="title">
       <ul class="titleContent">
-        <li class="contentItem" v-for="(item,i) in goods" :key="i">
+        <!-- todo 13 通过bind命令绑定配合计算属性,进行class更新 -->
+        <li class="contentItem" v-for="(item,i) in goods" :key="i" :class="{'current':currentIndex === i}">
           <span class="text border-1px">
             <icon v-if="item.type>=0" :type="item.type" :iconSize="3"></icon>
             {{item.name}}
@@ -13,7 +14,7 @@
     </div>
     <div ref="content" class="content-wrapper">
       <div class="content">
-      <div class="foods-list" v-for="(item,i) in goods" :key="i">
+      <div class="foods-list item-hook" v-for="(item,i) in goods" :key="i">
         <h1 class="title">{{item.name}}</h1>
         <ul class="foods-item border-1px" v-for="(foods,p) in item.foods" :key="p">
           <li class="item">
@@ -51,8 +52,24 @@ export default{
   },
   data () {
     return {
-      goods: {}
+      goods: {},
+      listHeight: [],
+      scrollY: 0
     };
+  },
+  computed: {
+    // todo 13 更新对应i值
+    currentIndex () {
+      for (let i = 0; i < this.listHeight.length; i++) {
+        let height1 = this.listHeight[i];
+        let height2 = this.listHeight[i + 1];
+        // 当height2为undefined时,则直接返回末位置
+        if (!height2 || (this.scrollY >= height1 && this.scrollY < height2)) {
+          return i;
+        }
+      }
+      return 0;
+    }
   },
   created () {
     this.$ajax.get('api/goods').then((res) => {
@@ -60,8 +77,8 @@ export default{
         this.goods = res.data.data;
         // todo 12 better-scroll模块运用
         this.$nextTick(() => {
-          console.log(this.$refs);
           this._initBScroll();
+          this._calculateHeight();
         });
       }
     }).catch((err) => {
@@ -74,7 +91,26 @@ export default{
   methods: {
     _initBScroll () { // todo 12 better-scroll模块运用
       this.leftScroll = new BScroll(this.$refs.title);
-      this.contentScroll = new BScroll(this.$refs.content);
+        // options中传入probeType可返回(暴露)参数
+      this.contentScroll = new BScroll(this.$refs.content, {
+        probeType: 3
+      });
+        // todo 13 将暴露的对象,绑定滚动事件,更新vue的data属性,配合计算属性更新
+      this.contentScroll.on('scroll', (pos) => {
+        this.scrollY = Math.abs(Math.round(pos.y));
+      });
+    },
+    // todo 13 better-scroll的滚动联动
+    _calculateHeight () {
+      // 获取DOM,获得每个区间高度
+      let foodList = this.$refs.content.getElementsByClassName('item-hook');
+      let height = 0;
+      this.listHeight.push(height);
+      for (let i = 0; i < foodList.length; i++) {
+        let item = foodList[i];
+        height += item.clientHeight;
+        this.listHeight.push(height);
+      }
     }
   }
 };
@@ -101,8 +137,17 @@ export default{
           // todo 11 通过display的显示类型为table,实现垂直居中效果
           display: table
           height: 54px
-          margin: 0 auto
+          padding: 0 12px
           font-size: 0
+          &.current
+            position: relative
+            z-index: 10
+            margin-top: -1px
+            background: #fff
+            &>.text
+              font-weight: 700
+            &>.text:after
+              border: none
           .text
             display: table-cell
             width: 56px
