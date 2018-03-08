@@ -195,7 +195,7 @@
         right: 12px
         top: 8px
         font-size: 10px
-    // todo 8 淡入淡出fade渐变效果,样式级别与v-show元素同级
+    // todo 8=18 淡入淡出fade渐变效果,样式级别与v-show元素同级
     .fade-enter
       opacity: 0
     .fade-enter-active

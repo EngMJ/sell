@@ -18,7 +18,8 @@
         </router-link>
       </div>
     </div>
-    <router-view></router-view>
+    <!-- todo 14 路由可直接接受自定义属性传参-->
+    <router-view :seller="seller"></router-view>
   </div>
 </template>
 

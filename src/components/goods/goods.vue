@@ -4,7 +4,7 @@
     <div class="left-title" ref="title">
       <ul class="titleContent">
         <!-- todo 13 通过bind命令绑定配合计算属性,进行class更新 -->
-        <li class="contentItem" v-for="(item,i) in goods" :key="i" :class="{'current':currentIndex === i}">
+        <li class="contentItem" v-for="(item,i) in goods" :key="i" :class="{'current':currentIndex === i}" @click="selectMenu(i,$event)">
           <span class="text border-1px">
             <icon v-if="item.type>=0" :type="item.type" :iconSize="3"></icon>
             {{item.name}}
@@ -33,16 +33,22 @@
                 <span v-show="foods.oldPrice" class="old-price">{{foods.oldPrice}}</span>
               </div>
             </div>
+            <div class="cartControl-wrapper">
+              <cartControl :food="foods"></cartControl>
+            </div>
           </li>
         </ul>
       </div>
       </div>
     </div>
+    <shopcart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import icon from '@/components/titleIcon/titleIcon';
+  import shopcart from '@/components/shopcart/shopcart';
+  import cartControl from '@/components/cartControl/cartControl';
   import BScroll from 'better-scroll';
 export default{
   props: {
@@ -75,7 +81,7 @@ export default{
     this.$ajax.get('api/goods').then((res) => {
       if (res.data.errno === 0) {
         this.goods = res.data.data;
-        // todo 12 better-scroll模块运用
+        // todo 12 better-scroll模块运用,需在DOM渲染完后
         this.$nextTick(() => {
           this._initBScroll();
           this._calculateHeight();
@@ -86,14 +92,20 @@ export default{
     });
   },
   components: {
-    icon
+    icon,
+    shopcart,
+    cartControl
   },
   methods: {
     _initBScroll () { // todo 12 better-scroll模块运用
-      this.leftScroll = new BScroll(this.$refs.title);
+      // options中传入click属性,可解开click禁用
+      this.leftScroll = new BScroll(this.$refs.title, {
+        click: true
+      });
         // options中传入probeType可返回(暴露)参数
       this.contentScroll = new BScroll(this.$refs.content, {
-        probeType: 3
+        probeType: 3,
+        click: true
       });
         // todo 13 将暴露的对象,绑定滚动事件,更新vue的data属性,配合计算属性更新
       this.contentScroll.on('scroll', (pos) => {
@@ -111,6 +123,11 @@ export default{
         height += item.clientHeight;
         this.listHeight.push(height);
       }
+    },
+    // 滚动联动
+    selectMenu (i) {
+      this.scrollY = this.listHeight[i];
+      this.contentScroll.scrollTo(0, -this.scrollY, 300);
     }
   }
 };
@@ -221,4 +238,8 @@ export default{
                     display: inline-block
                     content: '¥'
                     font-weight: normal
+            .cartControl-wrapper
+              position: absolute
+              right: 0px
+              bottom: 18px
 </style>
