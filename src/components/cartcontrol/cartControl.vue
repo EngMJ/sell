@@ -45,7 +45,8 @@
       transition: all .5s linear
     .side-enter,.side-leave-to
       opacity: 0
-      transform: translate(24px,0) rotate(180deg)
+      // todo 19 3d能调用移动端硬件加速,使效果更佳平滑
+      transform: translate3D(24px,0,0) rotate(180deg)
     .count-decrease,.count-add
       display: inline-block
       vertical-align: top
