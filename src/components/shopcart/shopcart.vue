@@ -21,9 +21,11 @@
         </div>
       </div>
     </div>
-    <!--todo 22 transition-group和多个小球元素-->
+    <!--todo 22 transition-group和多个小球元素,设置抛物线效果,需在内层设置横向偏移,外层设置纵向偏移,再结合贝塞尔曲线,形成抛物线效果-->
     <transition-group name="drop" @beforeEnter="beforeEnter" @enter="enter" @afterEnter="afterEnter">
-        <div class="balls" v-for="(ball,i) in balls" :key="i" v-show="ball.show"></div>
+        <div class="balls" v-for="(ball,i) in balls" :key="i" v-show="ball.show">
+          <div class="inner"></div>
+        </div>
     </transition-group>
   </div>
 </template>
@@ -125,15 +127,23 @@
         let x = rect.left - 32;
         let y = -(window.innerHeight - rect.top - 22);
         el.style.display = '';
-        el.style.webkitTransform = `translate3d(${x}px,${y}px,0)`;
-        el.style.transform = `translate3d(${x}px,${y}px,0)`;
+        // todo 22 内外层不同偏移方向,配合贝塞尔曲线,获得抛物线效果
+        el.style.webkitTransform = `translate3d(0,${y}px,0)`;
+        el.style.transform = `translate3d(0,${y}px,0)`;
+        let inner = el.getElementsByClassName('inner')[0];
+        inner.style.webkitTransform = `translate3d(${x}px,0,0)`;
+        inner.style.transform = `translate3d(${x}px,0,0)`;
       },
       enter (el) {
         // eslint跳过对声明未使用的变量的检测
         /* eslint-disable no-unused-vars */
         let rl = el.offsetHeight; // todo 19 激活页面重读
+        // todo 22 内外层不同偏移方向,配合贝塞尔曲线,获得抛物线效果
         el.style.webkitTransform = 'translate3d(0,0,0)';
         el.style.transform = 'translate3d(0,0,0)';
+        let inner = el.getElementsByClassName('inner')[0];
+        inner.style.webkitTransform = 'translate3d(0,0,0)';
+        inner.style.transform = 'translate3d(0,0,0)';
       },
       afterEnter (el) {
         // todo 20 对应值重置
@@ -230,14 +240,17 @@
           &.payEnd
             background: #00b43c
             color: #fff
-    .balls
+    .balls  // todo 22 贝塞尔曲线,内外层
       position: fixed
       left: 32px
       bottom: 22px
-      width 16px
-      height: 16px
-      border-radius: 50%
-      background: rgb(0,160,220)
+      z-index: 200
       &.drop-enter-active
-        transition: all 2s cubic-bezier(.49,-0.29,0.75,0.41)
+        transition: all .4s cubic-bezier(.49,-0.29,0.75,0.41)
+        .inner
+          width 16px
+          height: 16px
+          border-radius: 50%
+          background: rgb(0,160,220)
+          transition: all .4s linear
 </style>
