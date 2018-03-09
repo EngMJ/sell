@@ -137,7 +137,7 @@
       enter (el) {
         // eslint跳过对声明未使用的变量的检测
         /* eslint-disable no-unused-vars */
-        let rl = el.offsetHeight; // todo 19 激活页面重读
+        let rl = el.offsetHeight; // todo 19 激活页面重绘,可显示动效
         // todo 22 内外层不同偏移方向,配合贝塞尔曲线,获得抛物线效果
         el.style.webkitTransform = 'translate3d(0,0,0)';
         el.style.transform = 'translate3d(0,0,0)';
@@ -246,6 +246,7 @@
       bottom: 22px
       z-index: 200
       &.drop-enter-active
+        // todo 贝塞尔曲线大致理解,内层横向移动,外层纵向移动,则贝塞尔绘图取其镜像(根据贝塞尔绘图网站取值http://cubic-bezier.com)
         transition: all .4s cubic-bezier(.49,-0.29,0.75,0.41)
         .inner
           width 16px
