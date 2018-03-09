@@ -41,7 +41,7 @@
       </div>
       </div>
     </div>
-    <shopcart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
+    <shopcart :selectFoods="selectFood" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
   </div>
 </template>
 
@@ -75,6 +75,18 @@ export default{
         }
       }
       return 0;
+    },
+    // todo 19 通过Vue.set从子组件改变父组件中的实例数据,从而调动父组件计算属性,再由计算属性影响cart组件
+    selectFood () {
+      let foods = [];
+      this.goods.forEach((val) => {
+        val.foods.forEach((food) => {
+          if (food.count) {
+            foods.push(food);
+          }
+        });
+      });
+      return foods;
     }
   },
   created () {
@@ -157,6 +169,7 @@ export default{
           padding: 0 12px
           font-size: 0
           &.current
+            transition: all .1s linear
             position: relative
             z-index: 10
             margin-top: -1px
