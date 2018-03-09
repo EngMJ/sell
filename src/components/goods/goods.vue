@@ -79,6 +79,9 @@ export default{
     // todo 19 通过Vue.set从子组件改变父组件中的实例数据,从而调动父组件计算属性,再由计算属性影响cart组件
     selectFood () {
       let foods = [];
+      if (!this.goods.length) {
+        return [];
+      }
       this.goods.forEach((val) => {
         val.foods.forEach((food) => {
           if (food.count) {

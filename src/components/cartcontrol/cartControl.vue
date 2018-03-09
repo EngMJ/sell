@@ -4,12 +4,13 @@
         <div class="count-decrease icon-remove_circle_outline" v-show="food.count>0" @click="decreaseCart"></div>
       </transition>
       <div class="count" v-show="food.count>0">{{food.count}}</div>
-      <div class="count-add icon-add_circle" @click="addCart"></div>
+      <div class="count-add icon-add_circle" @click="addCart($event)"></div>
     </div>
 </template>
 
 <script type="text/ecmascript-6">
   import Vue from 'vue';
+  import eBus from '../../common/js/eventBus';
   export default{
     props: {
       food: {
@@ -17,13 +18,14 @@
       }
     },
     methods: {
-      addCart () {
+      addCart (e) {
         if (!this.food.count) {
           // todo 针对props属性的修改,是不允许的,所以也不会进行监听,需在实例中修改,其实更应推荐使用其他方法
           Vue.set(this.food, 'count', 1);
         } else {
           this.food.count++;
         }
+        eBus.$emit('addShow', e.target);
       },
       decreaseCart () {
         if (this.food.count) {

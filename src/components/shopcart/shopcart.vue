@@ -21,10 +21,15 @@
         </div>
       </div>
     </div>
+    <!--todo 22 transition-group和多个小球元素-->
+    <transition-group name="drop" @beforeEnter="beforeEnter" @enter="enter" @afterEnter="afterEnter">
+        <div class="balls" v-for="(ball,i) in balls" :key="i" v-show="ball.show"></div>
+    </transition-group>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+  import eBus from '../../common/js/eventBus';
   export default{
     props: {
       // todo 15 vue中props中传入obj,arr(引用类型),default需要是一个函数
@@ -40,6 +45,49 @@
       minPrice: {
         type: Number
       }
+    },
+    data () {
+      return {
+        balls: [
+          {
+            show: false
+          },
+          {
+            show: false
+          },
+          {
+            show: false
+          },
+          {
+            show: false
+          },
+          {
+            show: false
+          }
+          ],
+        ballShow: [],
+        el: ''
+      };
+    },
+    mounted () {
+      eBus.$on('addShow', (el) => {
+          // 获取+按钮el,修改balls数组,修改ballShow数组
+          this.el = el;
+          let balls = this.balls;
+          let ballShow = this.ballShow;
+          let count = balls.length;
+          // todo 21 多个小球,需多个元素通过v-for并以v-show进行联合使用,可产生多个元素同时过渡效果
+          // todo 21 此处令balls数组内show属性改变,从而令多个小球可同时出现
+          for (let i = 0; i < count; i++) {
+            if (!balls[i].show) {
+              balls[i].show = true;
+              // todo 20 通过js的引用类型关系,将选项push进ballShow数组,省去记录下标i值操作
+              // 届时在afterEnter方法中,按点击产生的程序执行次序,将ballShow数组内shift出来,并根据引用类型关系,更改它的值为false,以达到对应下标的对应值重置效果,能达到多个小球同时过渡的效果
+              ballShow.push(this.balls[i]);
+              return;
+            }
+          };
+      });
     },
     computed: {
       totalPrice () {
@@ -69,6 +117,28 @@
         if (this.totalPrice >= this.minPrice) {
           return 'payEnd';
         }
+      }
+    },
+    methods: {
+      beforeEnter (el) {
+        let rect = this.el.getBoundingClientRect();
+        let x = rect.left - 32;
+        let y = -(window.innerHeight - rect.top - 22);
+        el.style.display = '';
+        el.style.webkitTransform = `translate3d(${x}px,${y}px,0)`;
+        el.style.transform = `translate3d(${x}px,${y}px,0)`;
+      },
+      enter (el) {
+        // eslint跳过对声明未使用的变量的检测
+        /* eslint-disable no-unused-vars */
+        let rl = el.offsetHeight; // todo 19 激活页面重读
+        el.style.webkitTransform = 'translate3d(0,0,0)';
+        el.style.transform = 'translate3d(0,0,0)';
+      },
+      afterEnter (el) {
+        // todo 20 对应值重置
+        let ball = this.ballShow.shift();
+        ball.show = false;
       }
     }
   };
@@ -160,4 +230,14 @@
           &.payEnd
             background: #00b43c
             color: #fff
+    .balls
+      position: fixed
+      left: 32px
+      bottom: 22px
+      width 16px
+      height: 16px
+      border-radius: 50%
+      background: rgb(0,160,220)
+      &.drop-enter-active
+        transition: all 2s cubic-bezier(.49,-0.29,0.75,0.41)
 </style>
